@@ -46,6 +46,11 @@ class VariableJump extends Phaser.Scene {
             groundTile.body.allowGravity = false;
             this.ground.add(groundTile);
         }
+
+        //add god hands
+        this.god01 = new God(this, game.config.width, 32, 'god');
+        this.god02 = new God(this, game.config.width, 32*5, 'god');
+        this.god03 = new God(this, game.config.width, 32*10, 'god');
         //add banana
         this.banana = new Banana(this, game.config.width, 32, 'banana');
         //makes sure banana and ground collide and not go through each other
@@ -160,7 +165,9 @@ class VariableJump extends Phaser.Scene {
             isBananaColliding = true;
         });
         this.banana.update();
-        console.log(this.banana.x);
+        this.god01.update();
+        this.god02.update();
+        this.god03.update();
 
         // wrap physics object(s) .wrap(gameObject, padding)
         this.physics.world.wrap(this.cloud01, this.cloud01.width/2);
