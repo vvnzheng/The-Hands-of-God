@@ -4,7 +4,7 @@ class Banana extends Phaser.GameObjects.Sprite {
       super(scene, x, y, texture, frame);
   
       // add object to existing scene
-      scene.physics.add.existing(this, 0);
+      scene.physics.add.existing(this);
 
       this.isBananaThrown = false;
     }

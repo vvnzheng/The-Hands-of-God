@@ -51,8 +51,12 @@ class VariableJump extends Phaser.Scene {
         this.god01 = new God(this, game.config.width, 32, 'god');
         this.god02 = new God(this, game.config.width, 32*5, 'god');
         this.god03 = new God(this, game.config.width, 32*10, 'god');
+
         //add banana
         this.banana = new Banana(this, game.config.width, 32, 'banana');
+        this.bananatest = this.physics.add.sprite(game.config.width, 32, 'banana');
+        this.physics.add.collider(this.bananatest, this.ground);
+        this.physics.add.collider(this.bananatest, this.alien);
         //makes sure banana and ground collide and not go through each other
         this.physics.add.collider(this.banana, this.ground);
 
@@ -63,7 +67,6 @@ class VariableJump extends Phaser.Scene {
 
         //add collider between banana and player
         this.physics.add.collider(this.banana, this.alien);
-
         // add arrow key graphics as UI
         this.upKey = this.add.sprite(64, 32, 'arrowKey');
 		this.leftKey = this.add.sprite(32, 64, 'arrowKey');
@@ -161,10 +164,41 @@ class VariableJump extends Phaser.Scene {
 	    }
         
         //banana trajectory
-        this.physics.overlap(this.banana, this.alien, function(){
+        /*this.physics.overlap(this.banana, this.alien, function(){
             isBananaColliding = true;
         });
-        this.banana.update();
+        this.banana.update();*/
+
+        //tester
+        //new banana temp
+
+        //console.log(this.bananatest.x);
+        var bananaToss = false;
+        if(Phaser.Input.Keyboard.JustDown(spacebar)){
+            console.log('space!');
+            bananaToss = true;
+            //while(this.bananatest.x > 0-this.bananatest.width || !isBananaColliding){
+                this.bananatest.x = game.config.width;
+                this.bananatest.y = 32;
+            //}
+        }
+        this.physics.overlap(this.bananatest, this.alien, function(){
+            isBananaColliding = true;
+        });
+        if(isBananaColliding || this.bananatest.x <= 0 - this.bananatest.width){
+            this.bananatest.x = game.config.width;
+            this.bananatest.y = 32;
+            //this.bananatest.destroy;
+            isBananaColliding = false;
+            bananaToss = false;
+        } else {
+            this.bananatest.x -= 10;
+        }
+
+        console.log(this.bananatest.x);
+
+
+        //hands
         this.god01.update();
         this.god02.update();
         this.god03.update();

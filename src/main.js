@@ -29,7 +29,7 @@ let config = {
             }
         }
     },
-    scene: [Load, VariableJump]
+    scene: [Menu, Load, VariableJump]
 };
 
 let game = new Phaser.Game(config);
