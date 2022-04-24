@@ -24,13 +24,13 @@ class VariableJump extends Phaser.Scene {
         }
 
         // print Scene name
-        this.add.text(game.config.width/2, 30, 'Level 1: Baby', { font: '14px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
+        this.add.text(game.config.width/2, 30, 'Level 1: Baby', { font: '20px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
         
         // add some physics clouds
-        this.cloud01 = this.physics.add.sprite(600, 100, 'platformer_atlas', 'cloud_1');
+        /*this.cloud01 = this.physics.add.sprite(600, 100, 'platformer_atlas', 'cloud_1');
         this.cloud01.body.setAllowGravity(false).setVelocityX(25);
         this.cloud02 = this.physics.add.sprite(200, 200, 'platformer_atlas', 'cloud_2');
-        this.cloud02.body.setAllowGravity(false).setVelocityX(45);
+        this.cloud02.body.setAllowGravity(false).setVelocityX(45);*/
 
         // make ground tiles group
         this.ground = this.add.group();
@@ -60,6 +60,13 @@ class VariableJump extends Phaser.Scene {
         //makes sure banana and ground collide and not go through each other
         this.physics.add.collider(this.banana, this.ground);
 
+        //add hearts
+        this.heart1 = this.add.image(150, 75, 'heart');
+        this.heart2 = this.add.image(150 + 75, 75, 'heart');
+        this.heart3 = this.add.image(300, 75, 'heart');
+        this.lives = 3;
+        this.gameOver = false;
+
         // set up my alien son 👽
         this.alien = this.physics.add.sprite(game.config.width/2, game.config.height/2, 'platformer_atlas', 'front').setScale(SCALE);
         this.alien.setCollideWorldBounds(true);
@@ -85,7 +92,7 @@ class VariableJump extends Phaser.Scene {
         this.physics.add.collider(this.alien, this.ground);
 
         // set up Scene switcher
-        this.input.keyboard.on('keydown', (event) => {
+        /*this.input.keyboard.on('keydown', (event) => {
             //console.log(event);
             switch(event.key) {
                 case '1':
@@ -112,7 +119,7 @@ class VariableJump extends Phaser.Scene {
                 default:
                     break;
             }
-        });
+        });*/
     }
 
     update() {
@@ -188,6 +195,16 @@ class VariableJump extends Phaser.Scene {
         if(isBananaColliding || this.bananatest.x <= 0 - this.bananatest.width){
             this.bananatest.x = game.config.width;
             this.bananatest.y = 32;
+            if(isBananaColliding){
+                if(this.lives == 3){
+                    this.loseLives(this.heart1);
+                } else if(this.lives == 2){
+                    this.loseLives(this.heart2);
+                } else if(this.lives == 1){
+                    this.loseLives(this.heart3);
+                    
+                }
+            }
             //this.bananatest.destroy;
             isBananaColliding = false;
             bananaToss = false;
@@ -197,14 +214,18 @@ class VariableJump extends Phaser.Scene {
 
         console.log(this.bananatest.x);
 
-
         //hands
         this.god01.update();
         this.god02.update();
         this.god03.update();
 
         // wrap physics object(s) .wrap(gameObject, padding)
-        this.physics.world.wrap(this.cloud01, this.cloud01.width/2);
-        this.physics.world.wrap(this.cloud02, this.cloud02.width/2);
+        /*this.physics.world.wrap(this.cloud01, this.cloud01.width/2);
+        this.physics.world.wrap(this.cloud02, this.cloud02.width/2);*/
+    }
+    loseLives(heart){
+        console.log('Uhoh');
+            heart.destroy();
+            this.lives -= 1;
     }
 }

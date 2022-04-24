@@ -14,6 +14,7 @@ class Load extends Phaser.Scene {
         this.load.atlasXML('shooter_atlas', 'shooter_sheet.png', 'shooter_sheet.xml');
         this.load.image('banana', 'temp_banana.png');
         this.load.image('god', 'temp_god.png');
+        this.load.image('heart', 'temp_heart.png');
     }
 
     create() {
