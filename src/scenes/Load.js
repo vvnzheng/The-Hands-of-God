@@ -12,6 +12,7 @@ class Load extends Phaser.Scene {
         this.load.image('talltrees', 'talltrees.png');
         this.load.image('groundScroll', 'ground.png');
         this.load.atlasXML('shooter_atlas', 'shooter_sheet.png', 'shooter_sheet.xml');
+        this.load.image('banana', 'temp_banana.png');
     }
 
     create() {

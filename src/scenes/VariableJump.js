@@ -2,7 +2,6 @@ class VariableJump extends Phaser.Scene {
     constructor() {
         super('variableJumpScene');
     }
-
     create() {
         // variables and settings
         this.ACCELERATION = 1500;
@@ -25,7 +24,7 @@ class VariableJump extends Phaser.Scene {
         }
 
         // print Scene name
-        this.add.text(game.config.width/2, 30, 'Scene 4: Variable-Height/Multi Jumps', { font: '14px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
+        this.add.text(game.config.width/2, 30, 'Level 1: Baby', { font: '14px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
         
         // add some physics clouds
         this.cloud01 = this.physics.add.sprite(600, 100, 'platformer_atlas', 'cloud_1');
@@ -47,11 +46,18 @@ class VariableJump extends Phaser.Scene {
             groundTile.body.allowGravity = false;
             this.ground.add(groundTile);
         }
+        //add banana
+        this.banana = new Banana(this, game.config.width, 32, 'banana');
+        //makes sure banana and ground collide and not go through each other
+        this.physics.add.collider(this.banana, this.ground);
 
         // set up my alien son 👽
         this.alien = this.physics.add.sprite(game.config.width/2, game.config.height/2, 'platformer_atlas', 'front').setScale(SCALE);
         this.alien.setCollideWorldBounds(true);
         this.alien.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
+
+        //add collider between banana and player
+        this.physics.add.collider(this.banana, this.alien);
 
         // add arrow key graphics as UI
         this.upKey = this.add.sprite(64, 32, 'arrowKey');
@@ -65,6 +71,7 @@ class VariableJump extends Phaser.Scene {
 
         // set up Phaser-provided cursor key input
         cursors = this.input.keyboard.createCursorKeys();
+        spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         // add physics collider
         this.physics.add.collider(this.alien, this.ground);
@@ -107,18 +114,18 @@ class VariableJump extends Phaser.Scene {
             this.alien.setFlip(true, false);
             // see: https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Components.Animation.html#play__anchor
             // play(key [, ignoreIfPlaying] [, startFrame])
-            this.alien.anims.play('walk', true);
+            //this.alien.anims.play('walk', true);
             this.leftKey.tint = 0xFACADE;   // tint key
         } else if(cursors.right.isDown) {
             this.alien.body.setAccelerationX(this.ACCELERATION);
             this.alien.resetFlip();
-            this.alien.anims.play('walk', true);
+            //this.alien.anims.play('walk', true);
             this.rightKey.tint = 0xFACADE;  // tint key
         } else {
             // set acceleration to 0 so DRAG will take over
             this.alien.body.setAccelerationX(0);
             this.alien.body.setDragX(this.DRAG);
-            this.alien.anims.play('idle');
+            //this.alien.anims.play('idle');
             this.leftKey.tint = 0xFFFFFF;   // un-tint keys
             this.rightKey.tint = 0xFFFFFF;  
         }
@@ -130,7 +137,7 @@ class VariableJump extends Phaser.Scene {
 	    	this.jumps = this.MAX_JUMPS;
 	    	this.jumping = false;
 	    } else {
-	    	this.alien.anims.play('jump');
+	    	//this.alien.anims.play('jump');
 	    }
         // allow steady velocity change up to a certain key down duration
         // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.DownDuration__anchor
@@ -147,6 +154,13 @@ class VariableJump extends Phaser.Scene {
 	    	this.jumps--;
 	    	this.jumping = false;
 	    }
+        
+        //banana trajectory
+        this.physics.overlap(this.banana, this.alien, function(){
+            isBananaColliding = true;
+        });
+        this.banana.update();
+        console.log(this.banana.x);
 
         // wrap physics object(s) .wrap(gameObject, padding)
         this.physics.world.wrap(this.cloud01, this.cloud01.width/2);
