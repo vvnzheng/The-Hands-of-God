@@ -34,4 +34,4 @@ let config = {
 
 let game = new Phaser.Game(config);
 let isBananaColliding = false;
-let spacebar;
+let spacebar, rkey;

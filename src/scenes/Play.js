@@ -13,24 +13,8 @@ class VariableJump extends Phaser.Scene {
         currentScene = 3;
         this.physics.world.gravity.y = 2600;
 
-        // set bg color
-        this.cameras.main.setBackgroundColor('#223344');
-
-        // draw grid lines for jump height reference
-        let graphics = this.add.graphics();
-        graphics.lineStyle(2, 0xFFFFFF, 0.1);
-	    for(let y = game.config.height-70; y >= 35; y -= 35) {
-            graphics.lineBetween(0, y, game.config.width, y);
-        }
-
-        // print Scene name
+        // print Level name
         this.add.text(game.config.width/2, 30, 'Level 1: Baby', { font: '20px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
-        
-        // add some physics clouds
-        /*this.cloud01 = this.physics.add.sprite(600, 100, 'platformer_atlas', 'cloud_1');
-        this.cloud01.body.setAllowGravity(false).setVelocityX(25);
-        this.cloud02 = this.physics.add.sprite(200, 200, 'platformer_atlas', 'cloud_2');
-        this.cloud02.body.setAllowGravity(false).setVelocityX(45);*/
 
         // make ground tiles group
         this.ground = this.add.group();
@@ -87,39 +71,10 @@ class VariableJump extends Phaser.Scene {
         // set up Phaser-provided cursor key input
         cursors = this.input.keyboard.createCursorKeys();
         spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        rkey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
         // add physics collider
         this.physics.add.collider(this.alien, this.ground);
-
-        // set up Scene switcher
-        /*this.input.keyboard.on('keydown', (event) => {
-            //console.log(event);
-            switch(event.key) {
-                case '1':
-                    this.scene.start('velocityScene');
-                    break;
-                case '2':
-                    this.scene.start('accelerationScene');
-                    break;
-                case '3':
-                    this.scene.start('fixedJumpScene');
-                    break;
-                case '4':
-                    this.scene.start('variableJumpScene');
-                    break;
-                case '5':
-                    this.scene.start('runnerScene');
-                    break;
-                case '6':
-                    this.scene.start('pogoScene');
-                    break;
-                case '7':
-                    this.scene.start('asteroidsScene');
-                    break;
-                default:
-                    break;
-            }
-        });*/
     }
 
     update() {
@@ -169,25 +124,13 @@ class VariableJump extends Phaser.Scene {
 	    	this.jumps--;
 	    	this.jumping = false;
 	    }
-        
-        //banana trajectory
-        /*this.physics.overlap(this.banana, this.alien, function(){
-            isBananaColliding = true;
-        });
-        this.banana.update();*/
 
-        //tester
-        //new banana temp
-
-        //console.log(this.bananatest.x);
         var bananaToss = false;
         if(Phaser.Input.Keyboard.JustDown(spacebar)){
             console.log('space!');
             bananaToss = true;
-            //while(this.bananatest.x > 0-this.bananatest.width || !isBananaColliding){
                 this.bananatest.x = game.config.width;
                 this.bananatest.y = 32;
-            //}
         }
         this.physics.overlap(this.bananatest, this.alien, function(){
             isBananaColliding = true;
@@ -202,17 +145,23 @@ class VariableJump extends Phaser.Scene {
                     this.loseLives(this.heart2);
                 } else if(this.lives == 1){
                     this.loseLives(this.heart3);
-                    
+                    this.gameOver = true;
+                    this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
+                    this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
                 }
             }
             //this.bananatest.destroy;
             isBananaColliding = false;
             bananaToss = false;
         } else {
-            this.bananatest.x -= 10;
+            if(!this.gameOver){
+                this.bananatest.x -= 10;
+            }
         }
-
-        console.log(this.bananatest.x);
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(rkey)) {
+            console.log("restart");
+            this.scene.restart();
+        }
 
         //hands
         this.god01.update();
