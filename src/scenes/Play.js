@@ -8,13 +8,16 @@ class VariableJump extends Phaser.Scene {
         this.MAX_X_VEL = 500;   // pixels/second
         this.MAX_Y_VEL = 5000;
         this.DRAG = 600;    // DRAG < ACCELERATION = icy slide
-        this.MAX_JUMPS = 2; // change for double/triple/etc. jumps 🤾‍♀️
+        this.MAX_JUMPS = 1; // change for double/triple/etc. jumps 🤾‍♀️
         this.JUMP_VELOCITY = -700;
         currentScene = 3;
         this.physics.world.gravity.y = 2600;
 
         // print Level name
         this.add.text(game.config.width/2, 30, 'Level 1: Baby', { font: '20px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
+
+        //scrolling background
+        this.background = this.add.tileSprite(0, 0, 640,480, 'talltrees').setOrigin(0,0);
 
         // make ground tiles group
         this.ground = this.add.group();
@@ -24,12 +27,12 @@ class VariableJump extends Phaser.Scene {
             groundTile.body.allowGravity = false;
             this.ground.add(groundTile);
         }
-        for(let i = tileSize*2; i < game.config.width-tileSize*13; i += tileSize) {
+        /*for(let i = tileSize*2; i < game.config.width-tileSize*13; i += tileSize) {
             let groundTile = this.physics.add.sprite(i, game.config.height - tileSize*9, 'platformer_atlas', 'block').setScale(SCALE).setOrigin(0);
             groundTile.body.immovable = true;
             groundTile.body.allowGravity = false;
             this.ground.add(groundTile);
-        }
+        }*/
 
         //add god hands
         this.god01 = new God(this, game.config.width, 32, 'god');
@@ -37,12 +40,9 @@ class VariableJump extends Phaser.Scene {
         this.god03 = new God(this, game.config.width, 32*10, 'god');
 
         //add banana
-        this.banana = new Banana(this, game.config.width, 32, 'banana');
         this.bananatest = this.physics.add.sprite(game.config.width, 32, 'banana');
         this.physics.add.collider(this.bananatest, this.ground);
         this.physics.add.collider(this.bananatest, this.alien);
-        //makes sure banana and ground collide and not go through each other
-        this.physics.add.collider(this.banana, this.ground);
 
         //add hearts
         this.heart1 = this.add.image(150, 75, 'heart');
@@ -52,12 +52,15 @@ class VariableJump extends Phaser.Scene {
         this.gameOver = false;
 
         // set up my alien son 👽
-        this.alien = this.physics.add.sprite(game.config.width/2, game.config.height/2, 'platformer_atlas', 'front').setScale(SCALE);
+        this.alien = this.physics.add.sprite(game.config.width/2, game.config.height/2, 'baby');
         this.alien.setCollideWorldBounds(true);
         this.alien.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
+        this.anims.create({
+            key: 'walk',
+            frames: this.anims.generateFrameNumbers('baby', {start: 0, end: 7, first: 0}),
+            frameRate: 30
+        });
 
-        //add collider between banana and player
-        this.physics.add.collider(this.banana, this.alien);
         // add arrow key graphics as UI
         this.upKey = this.add.sprite(64, 32, 'arrowKey');
 		this.leftKey = this.add.sprite(32, 64, 'arrowKey');
@@ -84,12 +87,12 @@ class VariableJump extends Phaser.Scene {
             this.alien.setFlip(true, false);
             // see: https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Components.Animation.html#play__anchor
             // play(key [, ignoreIfPlaying] [, startFrame])
-            //this.alien.anims.play('walk', true);
+            this.alien.anims.play('walk', true);
             this.leftKey.tint = 0xFACADE;   // tint key
         } else if(cursors.right.isDown) {
             this.alien.body.setAccelerationX(this.ACCELERATION);
             this.alien.resetFlip();
-            //this.alien.anims.play('walk', true);
+            this.alien.anims.play('walk', true);
             this.rightKey.tint = 0xFACADE;  // tint key
         } else {
             // set acceleration to 0 so DRAG will take over
@@ -146,16 +149,22 @@ class VariableJump extends Phaser.Scene {
                 } else if(this.lives == 1){
                     this.loseLives(this.heart3);
                     this.gameOver = true;
-                    this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
-                    this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
+                    this.bananatest.x = game.config.width + 64;
+                    this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#00008b' }).setOrigin(0.5);
+                    this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#00008b' }).setOrigin(0.5);
                 }
             }
-            //this.bananatest.destroy;
             isBananaColliding = false;
             bananaToss = false;
         } else {
             if(!this.gameOver){
                 this.bananatest.x -= 10;
+                //hands
+                this.god01.update();
+                this.god02.update();
+                this.god03.update();
+                //make background scroll
+                this.background.tilePositionX -= 4;
             }
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(rkey)) {
@@ -163,10 +172,6 @@ class VariableJump extends Phaser.Scene {
             this.scene.restart();
         }
 
-        //hands
-        this.god01.update();
-        this.god02.update();
-        this.god03.update();
 
         // wrap physics object(s) .wrap(gameObject, padding)
         /*this.physics.world.wrap(this.cloud01, this.cloud01.width/2);

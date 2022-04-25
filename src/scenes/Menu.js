@@ -16,10 +16,8 @@ class Menu extends Phaser.Scene {
             fixedWidth: 0
         }
         //menu
-        this.add.text(game.config.width/2, game.config.height/2, 'Hands of God', menuConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2 + 30, 'Use arrow keys to move', menuConfig).setOrigin(0.5);
-        menuConfig.backgroundColor = '#00FF00';
-        menuConfig.color = '#000';
+        this.add.text(game.config.width/2, game.config.height/2 - 60, 'Hands of God', menuConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2, 'Use arrow keys to move', menuConfig).setOrigin(0.5);
         this.add.text(game.config.width/2, game.config.height/2 + 60, 'Press space to start', menuConfig).setOrigin(0.5);
         // define keys
         this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);

@@ -8,21 +8,11 @@ class God extends Phaser.GameObjects.Sprite {
       scene.add.existing(this);
     }
     update(){
-        /*if(Phaser.Input.Keyboard.JustDown(spacebar)){
-            console.log('throw');
-            this.isBananaThrown = true;
-        }*/
-        //if(this.isBananaThrown){
-            //while(this.x > 0 - this.width){
-                //left
-                if(this.x >= game.config.width - this.width ){
-                    this.x -= 3;
-                } else {
-                    this.reset();
-                }
-            //}
-            //this.reset();
-        //}
+        if(this.x >= game.config.width - this.width ){
+            this.x -= 3;
+        } else {
+            this.reset();
+        }
     }
     reset(){
         this.x = game.config.width;
