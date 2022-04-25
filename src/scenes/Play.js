@@ -8,19 +8,22 @@ class VariableJump extends Phaser.Scene {
         this.ACCELERATION = 700;
         this.MAX_X_VEL = 500;   // pixels/second
         this.MAX_Y_VEL = 5000;
-        this.DRAG = 600;    // DRAG < ACCELERATION = icy slide
+        this.DRAG = 1000;    // DRAG < ACCELERATION = icy slide
         this.MAX_JUMPS = 1; // change for double/triple/etc. jumps 🤾‍♀️
-        this.JUMP_VELOCITY = -700;
+        this.JUMP_VELOCITY = -600;
         currentScene = 3;
         this.physics.world.gravity.y = 2600;
 
-        // background 
-        this.background = this.add.tileSprite(0,0, game.config.width, game.config.height, 'background').setOrigin(0,0);
+        //background
+        this.background = this.add.tileSprite(0,0, game.config.width, game.config.height, 'talltrees').setOrigin(0,0);
 
-        //scrolling background
-        this.background = this.add.tileSprite(0, 0, 640,480, 'talltrees').setOrigin(0,0);
+        // ground 
+        this.ground = this.physics.add.sprite(0, game.config.height - tileSize, 'groundScroll').setOrigin(0);
+        this.ground.body.immovable = true;
+        this.ground.body.allowGravity = false;
 
-        // make ground tiles group
+        /*
+         make ground tiles group
         this.ground = this.add.group();
         for(let i = 0; i < game.config.width; i += tileSize) {
             let groundTile = this.physics.add.sprite(i, game.config.height - tileSize, 'platformer_atlas', 'block').setScale(SCALE).setOrigin(0);
@@ -28,7 +31,7 @@ class VariableJump extends Phaser.Scene {
             groundTile.body.allowGravity = false;
             this.ground.add(groundTile);
         }
-        /*for(let i = tileSize*2; i < game.config.width-tileSize*13; i += tileSize) {
+        for(let i = tileSize*2; i < game.config.width-tileSize*13; i += tileSize) {
             let groundTile = this.physics.add.sprite(i, game.config.height - tileSize*9, 'platformer_atlas', 'block').setScale(SCALE).setOrigin(0);
             groundTile.body.immovable = true;
             groundTile.body.allowGravity = false;
@@ -53,13 +56,13 @@ class VariableJump extends Phaser.Scene {
         this.gameOver = false;
 
         // set up my alien son 👽
-        this.alien = this.physics.add.sprite(game.config.width/2, game.config.height/2, 'baby');
+        this.alien = this.physics.add.sprite(game.config.width/2, game.config.height/2, 'baby').setScale(SCALE);
         this.alien.setCollideWorldBounds(true);
         this.alien.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
         this.anims.create({
             key: 'walk',
             frames: this.anims.generateFrameNumbers('baby', {start: 0, end: 7, first: 0}),
-            frameRate: 30
+            frameRate: 15
         });
 
         // add arrow key graphics as UI
@@ -168,7 +171,7 @@ class VariableJump extends Phaser.Scene {
                 this.god02.update();
                 this.god03.update();
                 //make background scroll
-                this.background.tilePositionX -= 4;
+                this.background.tilePositionX += 1;
             }
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(rkey)) {
