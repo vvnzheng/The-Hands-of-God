@@ -105,7 +105,8 @@ class VariableJump extends Phaser.Scene {
             // set acceleration to 0 so DRAG will take over
             this.alien.body.setAccelerationX(0);
             this.alien.body.setDragX(this.DRAG);
-            //this.alien.anims.play('idle');
+            //this.alien.anims.play('walk', true);
+            this.alien.body.x -= 2;
             this.leftKey.tint = 0xFFFFFF;   // un-tint keys
             this.rightKey.tint = 0xFFFFFF;  
         }
@@ -165,7 +166,22 @@ class VariableJump extends Phaser.Scene {
             bananaToss = false;
         } else {
             if(!this.gameOver){
-                this.bananatest.x -= 10;
+                console.log(this.alien.x);
+                if(this.alien.body.checkWorldBounds(screenLeft)){
+                    if(this.lives == 3){
+                        this.loseLives(this.heart1);
+                    } else if(this.lives == 2){
+                        this.loseLives(this.heart2);
+                    } else if(this.lives == 1){
+                        this.loseLives(this.heart3);
+                        this.gameOver = true;
+                        this.bananatest.x = game.config.width + 64;
+                        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#00008b' }).setOrigin(0.5);
+                        this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#00008b' }).setOrigin(0.5);
+                    }
+                }
+                this.bananatest.velocity = 5;
+                this.bananatest.x -= 5;
                 //hands
                 this.god01.update();
                 this.god02.update();

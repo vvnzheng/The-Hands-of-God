@@ -12,7 +12,7 @@ class Load extends Phaser.Scene {
         this.load.image('talltrees', 'talltrees.png');
         this.load.image('groundScroll', 'ground.png');
         this.load.atlasXML('shooter_atlas', 'shooter_sheet.png', 'shooter_sheet.xml');
-        this.load.image('banana', 'banana.png');
+        this.load.image('banana', 'bananaoutlined.png');
         this.load.image('god', 'temp_god.png');
         this.load.image('heart', 'temp_heart.png');
         this.load.spritesheet('baby', 'pinkchild-Sheet.png', {frameWidth: 64, frameHeight: 128, startFrame:0, endFrame: 7});
