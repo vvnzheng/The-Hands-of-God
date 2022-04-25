@@ -2,29 +2,48 @@ class Menu extends Phaser.Scene {
     constructor(){
         super("menuScene");
     }
-    create(){
+
+    preload() {
+        //load audio
+        this.load.audio('menuMusic', './assets/menuMusic.mp3');
+    }
+
+    create() {
         let menuConfig = {
-            fontFamily: 'Courier',
-            fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
+            fontFamily: 'Verdana',
+            fontSize: '60px',
+            fontStyle: 'bold',
+            backgroundColor: '#000000',
+            color: '#FFFFFF',
             align: 'right',
             padding: {
-                top: 5,
+                top:5,
                 bottom: 5,
             },
             fixedWidth: 0
         }
-        //menu
-        this.add.text(game.config.width/2, game.config.height/2 - 60, 'Hands of God', menuConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2, 'Use arrow keys to move', menuConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2 + 60, 'Press space to start', menuConfig).setOrigin(0.5);
-        // define keys
-        this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
+        this.game.sound.stopAll();
+        //play menu soundtrack
+        //this.soundtrack = this.sound.play('menuMusic', {loop: true, volume: 0.4});
+
+        //show menu text
+        this.add.text(game.config.width/2, game.config.height/2.7, 'ONLY GOD JUDGES', menuConfig).setOrigin(0.5);
+        menuConfig.fontSize = '18px';
+        this.add.text(game.config.width/2, game.config.height/1.7, 'Use ← → arrows to move &  ↑ to jump', menuConfig).setOrigin(0.5,-1.5);
+        menuConfig.fontStyle = 'bold';
+        menuConfig.backgroundColor = '#fbf236';
+        menuConfig.fontSize = '22px';
+        menuConfig.color = '#000000';
+        this.add.text(game.config.width/2, game.config.height/1.5, '[SPACE] to start', menuConfig).setOrigin(0.5,-1.5);
+
+        cursors = this.input.keyboard.createCursorKeys();
     }
+
     update() {
-        if (Phaser.Input.Keyboard.JustDown(this.keySPACE)) {
-          this.scene.start('loadScene');    
+        if(cursors.space.isDown){
+            //this.sound.play('insertFXhere');
+            this.scene.start('loadScene');
         }
-      }
+    }
 }

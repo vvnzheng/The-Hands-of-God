@@ -2,9 +2,10 @@ class VariableJump extends Phaser.Scene {
     constructor() {
         super('variableJumpScene');
     }
+    
     create() {
         // variables and settings
-        this.ACCELERATION = 1500;
+        this.ACCELERATION = 700;
         this.MAX_X_VEL = 500;   // pixels/second
         this.MAX_Y_VEL = 5000;
         this.DRAG = 600;    // DRAG < ACCELERATION = icy slide
@@ -13,8 +14,8 @@ class VariableJump extends Phaser.Scene {
         currentScene = 3;
         this.physics.world.gravity.y = 2600;
 
-        // print Level name
-        this.add.text(game.config.width/2, 30, 'Level 1: Baby', { font: '20px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
+        // background 
+        this.background = this.add.tileSprite(0,0, game.config.width, game.config.height, 'background').setOrigin(0,0);
 
         //scrolling background
         this.background = this.add.tileSprite(0, 0, 640,480, 'talltrees').setOrigin(0,0);
@@ -78,6 +79,9 @@ class VariableJump extends Phaser.Scene {
 
         // add physics collider
         this.physics.add.collider(this.alien, this.ground);
+
+        // print Level name
+        this.add.text(game.config.width/2, 30, 'Level 1: Baby', { font: '20px Futura', fill: '#000000' }).setOrigin(0.5);
     }
 
     update() {
@@ -178,7 +182,6 @@ class VariableJump extends Phaser.Scene {
         this.physics.world.wrap(this.cloud02, this.cloud02.width/2);*/
     }
     loseLives(heart){
-        console.log('Uhoh');
             heart.destroy();
             this.lives -= 1;
     }
