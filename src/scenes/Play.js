@@ -2,6 +2,13 @@ class VariableJump extends Phaser.Scene {
     constructor() {
         super('variableJumpScene');
     }
+<<<<<<< HEAD
+=======
+
+    preload() {
+        this.load.spritesheet('walk', 'assets/pinkchild-sheet.png', {frameWidth: 64, frameHeight: 128, startFrame: 0, endFrame: 7});
+    }
+>>>>>>> d1e3492e673e53672d5e30c8be94fbc4a481088f
     
     create() {
         // variables and settings
