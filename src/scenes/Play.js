@@ -22,22 +22,6 @@ class VariableJump extends Phaser.Scene {
         this.ground.body.immovable = true;
         this.ground.body.allowGravity = false;
 
-        /*
-         make ground tiles group
-        this.ground = this.add.group();
-        for(let i = 0; i < game.config.width; i += tileSize) {
-            let groundTile = this.physics.add.sprite(i, game.config.height - tileSize, 'platformer_atlas', 'block').setScale(SCALE).setOrigin(0);
-            groundTile.body.immovable = true;
-            groundTile.body.allowGravity = false;
-            this.ground.add(groundTile);
-        }
-        for(let i = tileSize*2; i < game.config.width-tileSize*13; i += tileSize) {
-            let groundTile = this.physics.add.sprite(i, game.config.height - tileSize*9, 'platformer_atlas', 'block').setScale(SCALE).setOrigin(0);
-            groundTile.body.immovable = true;
-            groundTile.body.allowGravity = false;
-            this.ground.add(groundTile);
-        }*/
-
         //add god hands
         this.god01 = new God(this, game.config.width, 32, 'god');
         this.god02 = new God(this, game.config.width, 32*5, 'god');
@@ -47,6 +31,14 @@ class VariableJump extends Phaser.Scene {
         this.bananatest = this.physics.add.sprite(game.config.width, 32, 'banana');
         this.physics.add.collider(this.bananatest, this.ground);
         this.physics.add.collider(this.bananatest, this.alien);
+        this.bspeed = 5;
+
+        //add lightning
+        this.lightning = this.physics.add.sprite(game.config.width, 200, 'lightning');
+        this.physics.add.collider(this.lightning, this.ground, function() {
+            explode = true;
+        });
+        this.physics.add.collider(this.lightning, this.alien);
 
         //add hearts
         this.heart1 = this.add.image(150, 75, 'heart');
@@ -84,10 +76,18 @@ class VariableJump extends Phaser.Scene {
         this.physics.add.collider(this.alien, this.ground);
 
         // print Level name
-        this.add.text(game.config.width/2, 30, 'Level 1: Baby', { font: '20px Futura', fill: '#000000' }).setOrigin(0.5);
+        this.add.text(game.config.width/2, 30, 'Level 1: Baby', { font: '40px Futura', fill: '#000000' }).setOrigin(0.5);
     }
 
     update() {
+        if(!this.gameOver){
+            var random = Phaser.Math.Between(1, 3);
+            this.bananatest.velocity = 5;
+            this.bananatest.x -= this.bspeed;
+            this.lightning.velocity = 200;
+            this.lightning.x -= 15;
+
+            
         // check keyboard input
         if(cursors.left.isDown) {
             this.alien.body.setAccelerationX(-this.ACCELERATION);
@@ -136,19 +136,32 @@ class VariableJump extends Phaser.Scene {
 	    	this.jumping = false;
 	    }
 
-        var bananaToss = false;
-        if(Phaser.Input.Keyboard.JustDown(spacebar)){
+        //var bananaToss = false;
+        /*if(Phaser.Input.Keyboard.JustDown(spacebar)){
             console.log('space!');
             bananaToss = true;
                 this.bananatest.x = game.config.width;
                 this.bananatest.y = 32;
-        }
+        }*/
         this.physics.overlap(this.bananatest, this.alien, function(){
             isBananaColliding = true;
         });
+        this.physics.overlap(this.lightning, this.alien, function(){
+            isLightningColliding = true;
+        })
         if(isBananaColliding || this.bananatest.x <= 0 - this.bananatest.width){
+            console.log(this.bananatest.x <= 0 - this.bananatest.width);
             this.bananatest.x = game.config.width;
-            this.bananatest.y = 32;
+            if(random == 1){
+                this.bananatest.y = 32;
+                this.bspeed = 10;
+            } else if(random == 2){
+                this.bananatest.y = 150;
+                this.bspeed = 7;
+            } else if(random == 3){
+                this.bananatest.y = 300;
+                this.bspeed = 5;
+            }
             if(isBananaColliding){
                 if(this.lives == 3){
                     this.loseLives(this.heart1);
@@ -163,42 +176,65 @@ class VariableJump extends Phaser.Scene {
                 }
             }
             isBananaColliding = false;
-            bananaToss = false;
-        } else {
-            if(!this.gameOver){
-                console.log(this.alien.x);
-                if(this.alien.body.checkWorldBounds(screenLeft)){
-                    if(this.lives == 3){
-                        this.loseLives(this.heart1);
-                    } else if(this.lives == 2){
-                        this.loseLives(this.heart2);
-                    } else if(this.lives == 1){
-                        this.loseLives(this.heart3);
-                        this.gameOver = true;
-                        this.bananatest.x = game.config.width + 64;
-                        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#00008b' }).setOrigin(0.5);
-                        this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#00008b' }).setOrigin(0.5);
-                    }
-                }
-                this.bananatest.velocity = 5;
-                this.bananatest.x -= 5;
-                //hands
-                this.god01.update();
-                this.god02.update();
-                this.god03.update();
-                //make background scroll
-                this.background.tilePositionX += 1;
+            //bananaToss = false;
+        }
+        if(isLightningColliding || explode){
+            this.lightning.x = game.config.width;
+            if(random == 1){
+                this.lightning.y = 32;
+            } else if(random == 2){
+                this.lightning.y = 150;
+            } else if(random == 3){
+                this.lightning.y = 300;
             }
+            if(isLightningColliding){
+                if(this.lives == 3){
+                    this.loseLives(this.heart1);
+                } else if(this.lives == 2){
+                    this.loseLives(this.heart2);
+                } else if(this.lives == 1){
+                    this.loseLives(this.heart3);
+                    this.gameOver = true;
+                    this.bananatest.x = game.config.width + 64;
+                    this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#00008b' }).setOrigin(0.5);
+                    this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#00008b' }).setOrigin(0.5);
+                }
+            }
+            isLightningColliding = false;
+            explode = false;
+        }
+        if(this.alien.body.checkWorldBounds(screenLeft)){
+            if(this.lives == 3){
+                this.loseLives(this.heart1);
+                this.loseLives(this.heart2);
+                this.loseLives(this.heart3);
+            } else if(this.lives == 2){
+                this.loseLives(this.heart2);
+                this.loseLives(this.heart3);
+            } else if(this.lives == 1){
+                this.loseLives(this.heart3);
+            }
+                this.lives = 0;
+                this.gameOver = true;
+                this.bananatest.x = game.config.width + 64;
+                this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#00008b' }).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#00008b' }).setOrigin(0.5);
+        }
+        //hands
+            this.god01.update();
+            this.god02.update();
+            this.god03.update();
+            //make background scroll
+            this.background.tilePositionX += 1;
+            
+        // wrap physics object(s) .wrap(gameObject, padding)
+        /*this.physics.world.wrap(this.cloud01, this.cloud01.width/2);
+        this.physics.world.wrap(this.cloud02, this.cloud02.width/2);*/
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(rkey)) {
             console.log("restart");
             this.scene.restart();
         }
-
-
-        // wrap physics object(s) .wrap(gameObject, padding)
-        /*this.physics.world.wrap(this.cloud01, this.cloud01.width/2);
-        this.physics.world.wrap(this.cloud02, this.cloud02.width/2);*/
     }
     loseLives(heart){
             heart.destroy();

@@ -30,7 +30,8 @@ class Menu extends Phaser.Scene {
         //show menu text
         this.add.text(game.config.width/2, game.config.height/2.7, 'ONLY GOD JUDGES', menuConfig).setOrigin(0.5);
         menuConfig.fontSize = '18px';
-        this.add.text(game.config.width/2, game.config.height/1.7, 'Use ← → arrows to move &  ↑ to jump', menuConfig).setOrigin(0.5,-1.5);
+        this.add.text(game.config.width/2, game.config.height/2.5, 'Use ← → arrows to move &  ↑ to jump', menuConfig).setOrigin(0.5,-1.5);
+        this.add.text(game.config.width/2, game.config.height/2, 'Dodge the obstacles and do not let god catch you', menuConfig).setOrigin(0.5,-1.5);
         menuConfig.fontStyle = 'bold';
         menuConfig.backgroundColor = '#fbf236';
         menuConfig.fontSize = '22px';

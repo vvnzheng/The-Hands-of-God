@@ -15,6 +15,7 @@ class Load extends Phaser.Scene {
         this.load.image('banana', 'bananaoutlined.png');
         this.load.image('god', 'temp_god.png');
         this.load.image('heart', 'temp_heart.png');
+        this.load.image('lightning', 'temp_lightning.png');
         this.load.spritesheet('baby', 'pinkchild-Sheet.png', {frameWidth: 64, frameHeight: 128, startFrame:0, endFrame: 7});
     }
 
