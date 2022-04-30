@@ -70,7 +70,7 @@ class VariableJump extends Phaser.Scene {
 		this.leftKey.rotation = Math.PI/2*3;
 		this.downKey.rotation = Math.PI;
         this.rightKey.rotation = Math.PI/2;
-        this.downKey.tint = 0x333333;
+        //this.downKey.tint = 0x333333;
 
         // set up Phaser-provided cursor key input
         cursors = this.input.keyboard.createCursorKeys();
@@ -101,20 +101,20 @@ class VariableJump extends Phaser.Scene {
                 // see: https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Components.Animation.html#play__anchor
                 // play(key [, ignoreIfPlaying] [, startFrame])
                 this.alien.anims.play('walk', true);
-                this.leftKey.tint = 0xFACADE;   // tint key
+                //this.leftKey.tint = 0xFACADE;   // tint key
             } else if(cursors.right.isDown) {
                 this.alien.body.setAccelerationX(this.ACCELERATION);
                 this.alien.resetFlip();
                 this.alien.anims.play('walk', true);
-                this.rightKey.tint = 0xFACADE;  // tint key
+                //this.rightKey.tint = 0xFACADE;  // tint key
             } else {
                 // set acceleration to 0 so DRAG will take over
                 this.alien.body.setAccelerationX(0);
                 this.alien.body.setDragX(this.DRAG);
                 //this.alien.anims.play('walk', true);
                 this.alien.body.x -= 2;
-                this.leftKey.tint = 0xFFFFFF;   // un-tint keys
-                this.rightKey.tint = 0xFFFFFF;  
+                //this.leftKey.tint = 0xFFFFFF;   // un-tint keys
+                //this.rightKey.tint = 0xFFFFFF;  
             }
 
 		    // check if alien is grounded
@@ -131,9 +131,9 @@ class VariableJump extends Phaser.Scene {
 	        if(this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 150)) {
 	            this.alien.body.velocity.y = this.JUMP_VELOCITY;
 	            this.jumping = true;
-	            this.upKey.tint = 0xFACADE;
+	            //this.upKey.tint = 0xFACADE;
 	        } else {
-	    	    this.upKey.tint = 0xFFFFFF;
+	    	    //this.upKey.tint = 0xFFFFFF;
 	        }
             // finally, letting go of the UP key subtracts a jump
             // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.UpDuration__anchor
@@ -178,6 +178,7 @@ class VariableJump extends Phaser.Scene {
                         this.gameOver = true;
                         this.bananatest.x = game.config.width + 64;
                         this.lightning.x = game.config.width + 64;
+                        this.jumping = false;
                         this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#00008b' }).setOrigin(0.5);
                         this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#00008b' }).setOrigin(0.5);
                     }
@@ -204,6 +205,7 @@ class VariableJump extends Phaser.Scene {
                         this.gameOver = true;
                         this.bananatest.x = game.config.width + 64;
                         this.lightning.x = game.config.width + 64;
+                        this.jumping = false;
                         this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#00008b' }).setOrigin(0.5);
                         this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#00008b' }).setOrigin(0.5);
                     }
@@ -211,7 +213,7 @@ class VariableJump extends Phaser.Scene {
                 isLightningColliding = false;
                 explode = false;
             }
-            if(this.alien.x < 70){
+            if(this.alien.x <= 180 && this.alien.y == 458){
                 if(this.lives == 3){
                     this.loseLives(this.heart1);
                     this.loseLives(this.heart2);
@@ -221,10 +223,11 @@ class VariableJump extends Phaser.Scene {
                     this.loseLives(this.heart3);
                 } else if(this.lives == 1){
                     this.loseLives(this.heart3);
-                    this.gameOver = true;
                 }
+                this.gameOver = true;
                 this.bananatest.x = game.config.width + 64;
                 this.lightning.x = game.config.width + 64;
+                this.jumping = false;
                 this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#00008b' }).setOrigin(0.5);
                 this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#00008b' }).setOrigin(0.5);
             }
