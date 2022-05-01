@@ -86,12 +86,108 @@ class VariableJump extends Phaser.Scene {
 
     update() {
         if(!this.gameOver){
-            var random = Phaser.Math.Between(1, 3);
+            var lane = Phaser.Math.Between(1,3);
+            this.bspeed = 5;
+            console.log(choose);
+            if(choose == 1){
+                if(counter == 0){
+                    this.bananatest.y = 32;
+                }
+                /*if(lane == 1){
+                    this.bananatest.y = 32;
+                    this.bspeed = 10;
+                } else if(lane == 2){
+                    this.bananatest.y = 150;
+                    this.bspeed = 7;
+                } else if(lane == 3){
+                    this.bananatest.y = 300;
+                    this.bspeed = 5;
+                }*/
+                this.bananatest.x -= this.bspeed;
+                counter++;
+            }
+            if(choose > 1){
+                this.bananatest.x = game.config.width;
+                this.bananatest.y = 32;
+                choose = Phaser.Math.Between(1,speed);
+                counter = 0;
+            }
             this.bananatest.velocity = 5;
-            this.bananatest.x -= this.bspeed;
             this.lightning.velocity = 200;
-            this.lightning.x -= 15;
+            //if(choose == 2){
+                //this.lightning.x -= 15;
+            //}
             this.ground.anims.play('floor', true);
+            this.physics.overlap(this.bananatest, this.alien, function(){
+                isBananaColliding = true;
+            });
+            this.physics.overlap(this.lightning, this.alien, function(){
+                isLightningColliding = true;
+            })
+            //if(choose == 1){
+                if(isBananaColliding || this.bananatest.x <= 180){
+                    this.bananatest.x = game.config.width;
+                    if(isBananaColliding){
+                        if(this.lives == 3){
+                        this.loseLives(this.heart1);
+                        } else if(this.lives == 2){
+                        this.loseLives(this.heart2);
+                        } else if(this.lives == 1){
+                            this.loseLives(this.heart3);
+                            this.endGame();
+                        }
+                    }
+                    choose = Phaser.Math.Between(1,speed);
+                    isBananaColliding = false;
+                    //bananaToss = false;
+                }
+            //} else if(choose == 2){
+                if(isLightningColliding || explode){
+                    this.lightning.x = game.config.width;
+                    if(lane == 1){
+                        this.lightning.y = 32;
+                    } else if(lane == 2){
+                        this.lightning.y = 150;
+                    } else if(lane == 3){
+                        this.lightning.y = 300;
+                    }
+                    if(isLightningColliding){
+                        if(this.lives == 3){
+                            this.loseLives(this.heart1);
+                        } else if(this.lives == 2){
+                            this.loseLives(this.heart2);
+                        } else if(this.lives == 1){
+                            this.loseLives(this.heart3);
+                            this.endGame();
+                        }
+                    }
+                    isLightningColliding = false;
+                    explode = false;
+                }
+            //}
+            if(this.alien.x <= 180 && this.alien.y == 458){
+                if(this.lives == 3){
+                    this.loseLives(this.heart1);
+                    this.loseLives(this.heart2);
+                    this.loseLives(this.heart3);
+                } else if(this.lives == 2){
+                    this.loseLives(this.heart2);
+                    this.loseLives(this.heart3);
+                } else if(this.lives == 1){
+                    this.loseLives(this.heart3);
+                }
+                this.endGame();
+            }
+            //hands
+                this.god01.update();
+                this.god02.update();
+                this.god03.update();
+                //make background scroll
+                this.background.tilePositionX += 1;
+            
+            // wrap physics object(s) .wrap(gameObject, padding)
+            /*this.physics.world.wrap(this.cloud01, this.cloud01.width/2);
+            this.physics.world.wrap(this.cloud02, this.cloud02.width/2);*/
 
             
             // check keyboard input
@@ -149,98 +245,6 @@ class VariableJump extends Phaser.Scene {
                 this.bananatest.x = game.config.width;
                 this.bananatest.y = 32;
             }*/
-            this.physics.overlap(this.bananatest, this.alien, function(){
-                isBananaColliding = true;
-            });
-            this.physics.overlap(this.lightning, this.alien, function(){
-                isLightningColliding = true;
-            })
-            if(isBananaColliding || this.bananatest.x <= 0 - this.bananatest.width){
-                console.log(this.bananatest.x <= 0 - this.bananatest.width);
-                this.bananatest.x = game.config.width;
-                if(random == 1){
-                    this.bananatest.y = 32;
-                    this.bspeed = 10;
-                } else if(random == 2){
-                    this.bananatest.y = 150;
-                    this.bspeed = 7;
-                } else if(random == 3){
-                    this.bananatest.y = 300;
-                    this.bspeed = 5;
-                }
-                if(isBananaColliding){
-                    if(this.lives == 3){
-                    this.loseLives(this.heart1);
-                    } else if(this.lives == 2){
-                    this.loseLives(this.heart2);
-                    } else if(this.lives == 1){
-                        this.loseLives(this.heart3);
-                        this.gameOver = true;
-                        this.bananatest.x = game.config.width + 64;
-                        this.lightning.x = game.config.width + 64;
-                        this.jumping = false;
-                        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#00008b' }).setOrigin(0.5);
-                        this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#00008b' }).setOrigin(0.5);
-                    }
-                }
-                isBananaColliding = false;
-                //bananaToss = false;
-            }
-            if(isLightningColliding || explode){
-                this.lightning.x = game.config.width;
-                if(random == 1){
-                    this.lightning.y = 32;
-                } else if(random == 2){
-                    this.lightning.y = 150;
-                } else if(random == 3){
-                    this.lightning.y = 300;
-                }
-                if(isLightningColliding){
-                    if(this.lives == 3){
-                        this.loseLives(this.heart1);
-                    } else if(this.lives == 2){
-                        this.loseLives(this.heart2);
-                    } else if(this.lives == 1){
-                        this.loseLives(this.heart3);
-                        this.gameOver = true;
-                        this.bananatest.x = game.config.width + 64;
-                        this.lightning.x = game.config.width + 64;
-                        this.jumping = false;
-                        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#00008b' }).setOrigin(0.5);
-                        this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#00008b' }).setOrigin(0.5);
-                    }
-                }
-                isLightningColliding = false;
-                explode = false;
-            }
-            if(this.alien.x <= 180 && this.alien.y == 458){
-                if(this.lives == 3){
-                    this.loseLives(this.heart1);
-                    this.loseLives(this.heart2);
-                    this.loseLives(this.heart3);
-                } else if(this.lives == 2){
-                    this.loseLives(this.heart2);
-                    this.loseLives(this.heart3);
-                } else if(this.lives == 1){
-                    this.loseLives(this.heart3);
-                }
-                this.gameOver = true;
-                this.bananatest.x = game.config.width + 64;
-                this.lightning.x = game.config.width + 64;
-                this.jumping = false;
-                this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#00008b' }).setOrigin(0.5);
-                this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#00008b' }).setOrigin(0.5);
-            }
-            //hands
-                this.god01.update();
-                this.god02.update();
-                this.god03.update();
-                //make background scroll
-                this.background.tilePositionX += 1;
-            
-            // wrap physics object(s) .wrap(gameObject, padding)
-            /*this.physics.world.wrap(this.cloud01, this.cloud01.width/2);
-            this.physics.world.wrap(this.cloud02, this.cloud02.width/2);*/
         }
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(rkey)) {
             console.log("restart");
@@ -250,5 +254,12 @@ class VariableJump extends Phaser.Scene {
     loseLives(heart){
             heart.destroy();
             this.lives -= 1;
+    }
+    endGame(){
+        this.gameOver = true;
+        this.bananatest.x = game.config.width + 64;
+        this.lightning.x = game.config.width + 64;
+        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#00008b' }).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#00008b' }).setOrigin(0.5);
     }
 }

@@ -1,7 +1,6 @@
 // Vivian Zheng, Charles Qi, Noah Kirsch, Allan Moua
-// Updated: 4/24/2020
+// Updated: 5/1/2020
 // The Hands of God
-// tame the javashrek
 'use strict';
 
 // global variables
@@ -29,5 +28,8 @@ let config = {
 };
 
 let game = new Phaser.Game(config);
-let isBananaColliding, isLightningColliding, explode = false;
+let isBananaColliding, isLightningColliding, explode= false;
 let spacebar, rkey;
+let counter = 0;
+let speed = 10;
+let choose = Phaser.Math.Between(1,speed);
