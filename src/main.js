@@ -1,9 +1,5 @@
 // Vivian Zheng, Charles Qi, Noah Kirsch, Allan Moua
-<<<<<<< HEAD
 // Updated: 5/1/2022
-=======
-// Updated: 5/1/2020
->>>>>>> 61f55656faed2f6d8861d424edf5b27ce1b7d4f7
 // The Hands of God
 'use strict';
 
