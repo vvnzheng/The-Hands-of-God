@@ -1,5 +1,9 @@
 // Vivian Zheng, Charles Qi, Noah Kirsch, Allan Moua
+<<<<<<< HEAD
 // Updated: 5/1/2022
+=======
+// Updated: 5/1/2020
+>>>>>>> 61f55656faed2f6d8861d424edf5b27ce1b7d4f7
 // The Hands of God
 'use strict';
 
@@ -29,7 +33,11 @@ let config = {
 
 let game = new Phaser.Game(config);
 let isBananaColliding, isLightningColliding, isPianoColliding, explode, crash= false;
+<<<<<<< HEAD
 let spacebar, rkey, tkey;
+=======
+let spacebar, rkey;
+>>>>>>> 61f55656faed2f6d8861d424edf5b27ce1b7d4f7
 let counter = 0;
 let speed = 5;
 let choose = Phaser.Math.Between(1,speed);
