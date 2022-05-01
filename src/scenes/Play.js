@@ -38,7 +38,7 @@ class VariableJump extends Phaser.Scene {
         //add banana
         this.bananatest = this.physics.add.sprite(game.config.width, 32, 'banana');
         this.physics.add.collider(this.bananatest, this.ground);
-        this.physics.add.collider(this.bananatest, this.alien);
+        this.physics.add.collider(this.bananatest, this.baby);
         this.bspeed = 5;
 
         //add lightning
@@ -46,7 +46,7 @@ class VariableJump extends Phaser.Scene {
         this.physics.add.collider(this.lightning, this.ground, function() {
             explode = true;
         });
-        this.physics.add.collider(this.lightning, this.alien);
+        this.physics.add.collider(this.lightning, this.baby);
 
         //add hearts
         this.heart1 = this.add.image(150, 75, 'heart');
@@ -55,10 +55,10 @@ class VariableJump extends Phaser.Scene {
         this.lives = 3;
         this.gameOver = false;
 
-        // set up my alien son 👽
-        this.alien = this.physics.add.sprite(game.config.width/2, game.config.height/2, 'baby').setScale(SCALE);
-        this.alien.setCollideWorldBounds(true);
-        this.alien.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
+        // set up my baby son 👽
+        this.baby = this.physics.add.sprite(game.config.width/2, game.config.height/2, 'baby').setScale(SCALE);
+        this.baby.setCollideWorldBounds(true);
+        this.baby.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
         this.anims.create({
             key: 'walk',
             frames: this.anims.generateFrameNumbers('baby', {start: 0, end: 7, first: 0}),
@@ -84,7 +84,7 @@ class VariableJump extends Phaser.Scene {
         rkey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
         // add physics collider
-        this.physics.add.collider(this.alien, this.ground);
+        this.physics.add.collider(this.baby, this.ground);
 
         // print Level name
         //this.add.text(game.config.width/2, 30, 'Level 1: Baby', { font: '40px Futura', fill: '#000000' }).setOrigin(0.5);
@@ -97,40 +97,59 @@ class VariableJump extends Phaser.Scene {
             console.log(choose);
             if(choose == 1){
                 if(counter == 0){
-                    this.bananatest.y = 32;
+                    if(lane == 1){
+                        this.bananatest.y = 32;
+                        this.bspeed = 10;
+                    } else if(lane == 2){
+                        this.bananatest.y = 150;
+                        this.bspeed = 7;
+                    } else if(lane == 3){
+                        this.bananatest.y = 300;
+                        this.bspeed = 5;
+                    }
                 }
-                /*if(lane == 1){
-                    this.bananatest.y = 32;
-                    this.bspeed = 10;
-                } else if(lane == 2){
-                    this.bananatest.y = 150;
-                    this.bspeed = 7;
-                } else if(lane == 3){
-                    this.bananatest.y = 300;
-                    this.bspeed = 5;
-                }*/
                 this.bananatest.x -= this.bspeed;
                 counter++;
             }
-            if(choose > 1){
+            if(choose == 2){
+                if(counter == 0){
+                    if(lane == 1){
+                        this.lightning.y = 32;
+                    } else if(lane == 2){
+                        this.lightning.y = 150;
+                    } else if(lane == 3){
+                        this.lightning.y = 300;
+                    }
+                }
+                this.lightning.x -= 15;
+                counter++;
+            }
+            if(choose > 2){
                 this.bananatest.x = game.config.width;
                 this.bananatest.y = 32;
                 choose = Phaser.Math.Between(1,speed);
                 counter = 0;
             }
+            //makes sure lightning doesn't constantly "explode" when falling off screen
+            if(choose != 2){
+                explode = false;
+            }
             this.bananatest.velocity = 5;
             this.lightning.velocity = 200;
-            //if(choose == 2){
-                //this.lightning.x -= 15;
-            //}
+
+            //animate floor
             this.ground.anims.play('floor', true);
-            this.physics.overlap(this.bananatest, this.alien, function(){
+
+            //if banana hits player
+            this.physics.overlap(this.bananatest, this.baby, function(){
                 isBananaColliding = true;
             });
-            this.physics.overlap(this.lightning, this.alien, function(){
+
+            //if lightning hits player
+            this.physics.overlap(this.lightning, this.baby, function(){
                 isLightningColliding = true;
             })
-            //if(choose == 1){
+
                 if(isBananaColliding || this.bananatest.x <= 180){
                     this.bananatest.x = game.config.width;
                     if(isBananaColliding){
@@ -144,19 +163,12 @@ class VariableJump extends Phaser.Scene {
                         }
                     }
                     choose = Phaser.Math.Between(1,speed);
+                    counter = 0;
                     isBananaColliding = false;
-                    //bananaToss = false;
                 }
-            //} else if(choose == 2){
+                console.log(explode);
                 if(isLightningColliding || explode){
                     this.lightning.x = game.config.width;
-                    if(lane == 1){
-                        this.lightning.y = 32;
-                    } else if(lane == 2){
-                        this.lightning.y = 150;
-                    } else if(lane == 3){
-                        this.lightning.y = 300;
-                    }
                     if(isLightningColliding){
                         if(this.lives == 3){
                             this.loseLives(this.heart1);
@@ -167,11 +179,13 @@ class VariableJump extends Phaser.Scene {
                             this.endGame();
                         }
                     }
+                    choose = Phaser.Math.Between(1,speed);
+                    counter = 0;
                     isLightningColliding = false;
                     explode = false;
                 }
             //}
-            if(this.alien.x <= 180 && this.alien.y == 458){
+            if(this.baby.x <= 180 && this.baby.y == 458){
                 if(this.lives == 3){
                     this.loseLives(this.heart1);
                     this.loseLives(this.heart2);
@@ -185,15 +199,15 @@ class VariableJump extends Phaser.Scene {
                 this.endGame();
             }
             //hands
-                this.god01.update();
-                this.god02.update();
-                this.god03.update();
-                //make background scroll
-                this.background.tilePositionX += 1;
-                this.background1_2.tilePositionX += 0.5;
-                this.background1_3.tilePositionX += 0.3;
-                this.background1_4.tilePositionX += 0.5;
-                this.background1_5.tilePositionX += 0.9;
+            this.god01.update();
+            this.god02.update();
+            this.god03.update();
+            //make background scroll
+            this.background.tilePositionX += 1;
+            this.background1_2.tilePositionX += 0.5;
+            this.background1_3.tilePositionX += 0.3;
+            this.background1_4.tilePositionX += 0.5;
+            this.background1_5.tilePositionX += 0.9;
             
             // wrap physics object(s) .wrap(gameObject, padding)
             /*this.physics.world.wrap(this.cloud01, this.cloud01.width/2);
@@ -202,40 +216,40 @@ class VariableJump extends Phaser.Scene {
             
             // check keyboard input
             if(cursors.left.isDown) {
-                this.alien.body.setAccelerationX(-this.ACCELERATION);
-                this.alien.setFlip(true, false);
+                this.baby.body.setAccelerationX(-this.ACCELERATION);
+                this.baby.setFlip(true, false);
                 // see: https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Components.Animation.html#play__anchor
                 // play(key [, ignoreIfPlaying] [, startFrame])
-                this.alien.anims.play('walk', true);
+                this.baby.anims.play('walk', true);
                 //this.leftKey.tint = 0xFACADE;   // tint key
             } else if(cursors.right.isDown) {
-                this.alien.body.setAccelerationX(this.ACCELERATION);
-                this.alien.resetFlip();
-                this.alien.anims.play('walk', true);
+                this.baby.body.setAccelerationX(this.ACCELERATION);
+                this.baby.resetFlip();
+                this.baby.anims.play('walk', true);
                 //this.rightKey.tint = 0xFACADE;  // tint key
             } else {
                 // set acceleration to 0 so DRAG will take over
-                this.alien.body.setAccelerationX(0);
-                this.alien.body.setDragX(this.DRAG);
-                //this.alien.anims.play('walk', true);
-                this.alien.body.x -= 2;
+                this.baby.body.setAccelerationX(0);
+                this.baby.body.setDragX(this.DRAG);
+                //this.baby.anims.play('walk', true);
+                this.baby.body.x -= 2;
                 //this.leftKey.tint = 0xFFFFFF;   // un-tint keys
                 //this.rightKey.tint = 0xFFFFFF;  
             }
 
-		    // check if alien is grounded
-	        this.alien.isGrounded = this.alien.body.touching.down;
+		    // check if baby is grounded
+	        this.baby.isGrounded = this.baby.body.touching.down;
 	        // if so, we have jumps to spare 
-	        if(this.alien.isGrounded) {
+	        if(this.baby.isGrounded) {
 	    	    this.jumps = this.MAX_JUMPS;
 	    	    this.jumping = false;
 	        } else {
-	    	    //this.alien.anims.play('jump');
+	    	    //this.baby.anims.play('jump');
 	        }
             // allow steady velocity change up to a certain key down duration
             // see: https://photonstorm.github.io/phaser3-docs/Phaser.Input.Keyboard.html#.DownDuration__anchor
 	        if(this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 150)) {
-	            this.alien.body.velocity.y = this.JUMP_VELOCITY;
+	            this.baby.body.velocity.y = this.JUMP_VELOCITY;
 	            this.jumping = true;
 	            //this.upKey.tint = 0xFACADE;
 	        } else {
@@ -247,14 +261,6 @@ class VariableJump extends Phaser.Scene {
 	    	    this.jumps--;
 	    	    this.jumping = false;
 	        }
-
-            //var bananaToss = false;
-            /*if(Phaser.Input.Keyboard.JustDown(spacebar)){
-                console.log('space!');
-                bananaToss = true;
-                this.bananatest.x = game.config.width;
-                this.bananatest.y = 32;
-            }*/
         }
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(rkey)) {
             console.log("restart");
@@ -269,7 +275,7 @@ class VariableJump extends Phaser.Scene {
         this.gameOver = true;
         this.bananatest.x = game.config.width + 64;
         this.lightning.x = game.config.width + 64;
-        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#00008b' }).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#00008b' }).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
     }
 }
