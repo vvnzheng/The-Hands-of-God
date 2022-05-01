@@ -56,13 +56,13 @@ class VariableJump extends Phaser.Scene {
         this.physics.add.collider(this.piano, this.baby);
 
         //add hearts
-        this.heart1 = this.add.image(150, 75, 'heart');
-        this.heart2 = this.add.image(150 + 75, 75, 'heart');
-        this.heart3 = this.add.image(300, 75, 'heart');
+        this.heart1 = this.add.image(50, 40, 'heart');
+        this.heart2 = this.add.image(125, 40, 'heart');
+        this.heart3 = this.add.image(200, 40, 'heart');
         this.lives = 3;
         this.gameOver = false;
 
-        // set up my baby son 👽
+        // set up baby 
         this.baby = this.physics.add.sprite(game.config.width/2, game.config.height/2, 'baby').setScale(SCALE);
         this.baby.setCollideWorldBounds(true);
         this.baby.setMaxVelocity(this.MAX_X_VEL, this.MAX_Y_VEL);
@@ -74,16 +74,6 @@ class VariableJump extends Phaser.Scene {
 
         //background grass
         this.background1_5 = this.add.tileSprite(175,481, game.config.width, 0, 'background_Grass').setOrigin(0,0);
-
-        // add arrow key graphics as UI
-        this.upKey = this.add.sprite(64, 32, 'arrowKey');
-		this.leftKey = this.add.sprite(32, 64, 'arrowKey');
-		this.downKey = this.add.sprite(64, 64, 'arrowKey');
-		this.rightKey = this.add.sprite(96, 64, 'arrowKey');
-		this.leftKey.rotation = Math.PI/2*3;
-		this.downKey.rotation = Math.PI;
-        this.rightKey.rotation = Math.PI/2;
-        //this.downKey.tint = 0x333333;
 
         // set up Phaser-provided cursor key input
         cursors = this.input.keyboard.createCursorKeys();
