@@ -28,8 +28,8 @@ let config = {
 };
 
 let game = new Phaser.Game(config);
-let isBananaColliding, isLightningColliding, explode= false;
+let isBananaColliding, isLightningColliding, isPianoColliding, explode, crash= false;
 let spacebar, rkey;
 let counter = 0;
-let speed = 10;
+let speed = 5;
 let choose = Phaser.Math.Between(1,speed);

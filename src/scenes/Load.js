@@ -16,6 +16,7 @@ class Load extends Phaser.Scene {
         this.load.image('god', 'temp_god.png');
         this.load.image('heart', 'temp_heart.png');
         this.load.image('lightning', 'temp_lightning.png');
+        this.load.image('piano', 'piano.png');
         //background level 1
         this.load.image('background1_1', 'background1_1.png');
         this.load.image('background1_2', 'background1_2.png');

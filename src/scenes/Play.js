@@ -48,6 +48,13 @@ class VariableJump extends Phaser.Scene {
         });
         this.physics.add.collider(this.lightning, this.baby);
 
+        //add piano
+        this.piano = this.physics.add.sprite(game.config.width, 200, 'piano');
+        this.physics.add.collider(this.piano, this.ground, function() {
+            crash = true;
+        });
+        this.physics.add.collider(this.piano, this.baby);
+
         //add hearts
         this.heart1 = this.add.image(150, 75, 'heart');
         this.heart2 = this.add.image(150 + 75, 75, 'heart');
@@ -99,13 +106,13 @@ class VariableJump extends Phaser.Scene {
                 if(counter == 0){
                     if(lane == 1){
                         this.bananatest.y = 32;
-                        this.bspeed = 10;
+                        this.bspeed = 3;
                     } else if(lane == 2){
                         this.bananatest.y = 150;
-                        this.bspeed = 7;
+                        this.bspeed = 3;
                     } else if(lane == 3){
                         this.bananatest.y = 300;
-                        this.bspeed = 5;
+                        this.bspeed = 3;
                     }
                 }
                 this.bananatest.x -= this.bspeed;
@@ -121,10 +128,23 @@ class VariableJump extends Phaser.Scene {
                         this.lightning.y = 300;
                     }
                 }
-                this.lightning.x -= 15;
+                this.lightning.x -= 7;
                 counter++;
             }
-            if(choose > 2){
+            if(choose == 3){
+                if(counter == 0){
+                    if(lane == 1){
+                        this.piano.y = 32;
+                    } else if(lane == 2){
+                        this.piano.y = 150;
+                    } else if(lane == 3){
+                        this.piano.y = 300;
+                    }
+                }
+                this.piano.x -= 10;
+                counter++;
+            }
+            if(choose > 3){
                 this.bananatest.x = game.config.width;
                 this.bananatest.y = 32;
                 choose = Phaser.Math.Between(1,speed);
@@ -134,8 +154,12 @@ class VariableJump extends Phaser.Scene {
             if(choose != 2){
                 explode = false;
             }
+            if(choose !=3){
+                crash = false;
+            }
             this.bananatest.velocity = 5;
             this.lightning.velocity = 200;
+            this.piano.velocity = 500;
 
             //animate floor
             this.ground.anims.play('floor', true);
@@ -148,6 +172,11 @@ class VariableJump extends Phaser.Scene {
             //if lightning hits player
             this.physics.overlap(this.lightning, this.baby, function(){
                 isLightningColliding = true;
+            })
+
+            //if piano hits player
+            this.physics.overlap(this.piano, this.baby, function(){
+                isPianoColliding = true;
             })
 
                 if(isBananaColliding || this.bananatest.x <= 180){
@@ -166,7 +195,6 @@ class VariableJump extends Phaser.Scene {
                     counter = 0;
                     isBananaColliding = false;
                 }
-                console.log(explode);
                 if(isLightningColliding || explode){
                     this.lightning.x = game.config.width;
                     if(isLightningColliding){
@@ -184,7 +212,23 @@ class VariableJump extends Phaser.Scene {
                     isLightningColliding = false;
                     explode = false;
                 }
-            //}
+                if(isPianoColliding || crash){
+                    this.piano.x = game.config.width;
+                    if(isPianoColliding){
+                        if(this.lives == 3){
+                            this.loseLives(this.heart1);
+                        } else if(this.lives == 2){
+                            this.loseLives(this.heart2);
+                        } else if(this.lives == 1){
+                            this.loseLives(this.heart3);
+                            this.endGame();
+                        }
+                    }
+                    choose = Phaser.Math.Between(1,speed);
+                    counter = 0;
+                    isPianoColliding = false;
+                    crash = false;
+                }
             if(this.baby.x <= 180 && this.baby.y == 458){
                 if(this.lives == 3){
                     this.loseLives(this.heart1);
