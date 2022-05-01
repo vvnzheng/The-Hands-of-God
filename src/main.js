@@ -33,11 +33,7 @@ let config = {
 
 let game = new Phaser.Game(config);
 let isBananaColliding, isLightningColliding, isPianoColliding, explode, crash= false;
-<<<<<<< HEAD
 let spacebar, rkey, tkey;
-=======
-let spacebar, rkey;
->>>>>>> 61f55656faed2f6d8861d424edf5b27ce1b7d4f7
 let counter = 0;
 let speed = 5;
 let choose = Phaser.Math.Between(1,speed);
