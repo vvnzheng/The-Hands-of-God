@@ -15,7 +15,10 @@ class VariableJump extends Phaser.Scene {
         this.physics.world.gravity.y = 2600;
 
         //background
-        this.background = this.add.tileSprite(0,0, game.config.width, game.config.height, 'talltrees').setOrigin(0,0);
+        this.background1_4 = this.add.tileSprite(0,0, game.config.width, game.config.height, 'background1_4').setOrigin(0,0);
+        this.background1_3 = this.add.tileSprite(0,0, game.config.width, game.config.height, 'background1_3').setOrigin(0,0);
+        this.background1_2 = this.add.tileSprite(0,0, game.config.width, game.config.height, 'background1_2').setOrigin(0,0);
+        this.background = this.add.tileSprite(0,0, game.config.width, game.config.height, 'background1_1').setOrigin(0,0);
 
         // ground 
         this.ground = this.physics.add.sprite(0, game.config.height - tileSize, 'ground').setOrigin(0);
@@ -61,6 +64,9 @@ class VariableJump extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('baby', {start: 0, end: 7, first: 0}),
             frameRate: 15
         });
+
+        //background grass
+        this.background1_5 = this.add.tileSprite(175,481, game.config.width, 0, 'background_Grass').setOrigin(0,0);
 
         // add arrow key graphics as UI
         this.upKey = this.add.sprite(64, 32, 'arrowKey');
@@ -184,6 +190,10 @@ class VariableJump extends Phaser.Scene {
                 this.god03.update();
                 //make background scroll
                 this.background.tilePositionX += 1;
+                this.background1_2.tilePositionX += 0.5;
+                this.background1_3.tilePositionX += 0.3;
+                this.background1_4.tilePositionX += 0.5;
+                this.background1_5.tilePositionX += 0.9;
             
             // wrap physics object(s) .wrap(gameObject, padding)
             /*this.physics.world.wrap(this.cloud01, this.cloud01.width/2);
