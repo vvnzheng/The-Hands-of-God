@@ -14,6 +14,17 @@ class VariableJump extends Phaser.Scene {
         currentScene = 3;
         this.physics.world.gravity.y = 2600;
 
+        this.jumpFX = this.sound.add('jump2', {loop: false, volume: 1});
+        this.lightningFX = this.sound.add('lightningFX', {loop: false, volume: 1});
+        this.pianoFX = this.sound.add('pianoFX', {loop: false, volume: 1});
+        this.bananaFX = this.sound.add('bananaFX', {loop: false, volume: 1});
+
+
+        this.game.sound.stopAll();
+        //play level soundtrack
+        this.levelSoundtrack = this.sound.add('levelMusic', {loop: true, volume: 1});
+        this.levelSoundtrack.play();
+
         //background
         this.background1_4 = this.add.tileSprite(0,0, game.config.width, game.config.height, 'background1_4').setOrigin(0,0);
         this.background1_3 = this.add.tileSprite(0,0, game.config.width, game.config.height, 'background1_3').setOrigin(0,0);
@@ -107,6 +118,7 @@ class VariableJump extends Phaser.Scene {
                 }
                 this.bananatest.x -= this.bspeed;
                 counter++;
+                this.bananaFX.play();
             }
             if(choose == 2){
                 if(counter == 0){
@@ -120,6 +132,7 @@ class VariableJump extends Phaser.Scene {
                 }
                 this.lightning.x -= 7;
                 counter++;
+                this.lightningFX.play();
             }
             if(choose == 3){
                 if(counter == 0){
@@ -133,6 +146,7 @@ class VariableJump extends Phaser.Scene {
                 }
                 this.piano.x -= 10;
                 counter++;
+                this.pianoFX.play();
             }
             if(choose > 3){
                 this.bananatest.x = game.config.width;
@@ -286,6 +300,7 @@ class VariableJump extends Phaser.Scene {
 	            this.baby.body.velocity.y = this.JUMP_VELOCITY;
 	            this.jumping = true;
 	            //this.upKey.tint = 0xFACADE;
+                this.jumpFX.play();
 	        } else {
 	    	    //this.upKey.tint = 0xFFFFFF;
 	        }
@@ -304,12 +319,13 @@ class VariableJump extends Phaser.Scene {
     loseLives(heart){
             heart.destroy();
             this.lives -= 1;
+            this.sound.play('crush'); 
     }
     endGame(){
         this.gameOver = true;
         this.bananatest.x = game.config.width + 64;
         this.lightning.x = game.config.width + 64;
-        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
+        this.gameOver_Screen = this.add.tileSprite(game.config.width/2,game.config.height/2, 0, 0,'gameover');
+        this.sound.play('deathFX');
     }
 }
