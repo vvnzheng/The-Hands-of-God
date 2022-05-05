@@ -36,20 +36,20 @@ class VariableJump extends Phaser.Scene {
         this.god03 = new God(this, game.config.width, 32*10, 'god');
 
         //add banana
-        this.bananatest = this.physics.add.sprite(game.config.width, 32, 'banana');
+        this.bananatest = this.physics.add.sprite(game.config.width + 50, 32, 'banana');
         this.physics.add.collider(this.bananatest, this.ground);
         this.physics.add.collider(this.bananatest, this.baby);
         this.bspeed = 5;
 
         //add lightning
-        this.lightning = this.physics.add.sprite(game.config.width, 200, 'lightning');
+        this.lightning = this.physics.add.sprite(game.config.width + 50, 32, 'lightning');
         this.physics.add.collider(this.lightning, this.ground, function() {
             explode = true;
         });
         this.physics.add.collider(this.lightning, this.baby);
 
         //add piano
-        this.piano = this.physics.add.sprite(game.config.width, 200, 'piano');
+        this.piano = this.physics.add.sprite(game.config.width + 50, 32, 'piano');
         this.physics.add.collider(this.piano, this.ground, function() {
             crash = true;
         });
@@ -309,6 +309,7 @@ class VariableJump extends Phaser.Scene {
         this.gameOver = true;
         this.bananatest.x = game.config.width + 64;
         this.lightning.x = game.config.width + 64;
+        this.piano.x = game.config.width + 64;
         this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
         this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
     }
