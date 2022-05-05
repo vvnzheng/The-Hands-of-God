@@ -139,7 +139,6 @@ class VariableJump extends Phaser.Scene {
             delay: 5000,                // increase score every 5 seconds
             callback: () => {
                 if(!this.gameOver){
-                    console.log('timer');
                     score += this.scoreIncrement;
                     this.progresstext.destroy();
                     this.progresstext = this.add.text(game.config.width/2, 30, 'Level ' + this.level + ' Score: ' + score, { font: '30px Futura', fill: '#000000' }).setOrigin(0.5);
@@ -154,27 +153,22 @@ class VariableJump extends Phaser.Scene {
     
         //add gameover text
         this.gameOverText = this.add.image(game.config.width * 2, 0, 'gameover');
+
+        //add tombstone
+        this.tombstone = this.add.image(game.config.width, 0, 'tombstone');
+
+        this.difficultyIncrease = false;
+
         
     }
     timerEvent() {
         if(!this.gameOver){
-            console.log('timerEvent');
             //this.levelUpText = this.add.text(game.config.width/2, 70, 'LEVEL UP!',  { font: '45px Futura', fill: '#EE4B2B' }).setOrigin(0.5);
             this.level += 1;
             this.progresstext.destroy();
             this.progresstext = this.add.text(game.config.width/2, 30, 'Level ' + this.level + ' Score: ' + score, { font: '30px Futura', fill: '#000000' }).setOrigin(0.5);
-    
-            this.time.delayedCall(3000, () => {
-                //this.levelUpText.destroy();
-            })
-            if(this.bdifficulty > 10 && choose != this.tempChoose){
-                this.bdifficulty -= 10;
-                this.ldifficulty -= 8;
-                this.pdifficulty -= 6;
-                this.doubledifficulty -= 4;
-                this.tripledifficulty -= 2;
-                this.scoreIncrement += 10;
-            }
+            this.scoreIncrement += 10;
+            this.difficultyIncrease = true;
             // Create your new object here.
         }
     }
@@ -186,7 +180,6 @@ class VariableJump extends Phaser.Scene {
             var lanep = Phaser.Math.Between(1,3);
             console.log(choose);
             if(choose <= this.bdifficulty || choose >= this.doubledifficulty){
-                console.log('banana');
                 if(choose != this.tempChoose){
                     if(laneb == 1){
                         this.toss1 = true;
@@ -306,7 +299,6 @@ class VariableJump extends Phaser.Scene {
                     } else if(this.lives == 2){
                         this.loseLives(this.heart2);
                     } else if(this.lives == 1){
-                        console.log('uhoh piano');
                         this.loseLives(this.heart3);
                         this.endGame();
                     }
@@ -316,6 +308,14 @@ class VariableJump extends Phaser.Scene {
                 crash = false;
             }
             if((this.bananatest.x == game.config.width) && (this.lightning.x == game.config.width) && (this.piano.x == game.config.width)){
+                if(this.difficultyIncrease){
+                    this.difficultyIncrease = false;
+                    this.bdifficulty -= 10;
+                    this.ldifficulty -= 8;
+                    this.pdifficulty -= 6;
+                    this.doubledifficulty -= 4;
+                    this.tripledifficulty -= 2;
+                }
                 choose = Phaser.Math.Between(1, speed);
             } else {
                 this.tempChoose = choose;
@@ -436,6 +436,9 @@ class VariableJump extends Phaser.Scene {
         this.sound.play('deathFX');
         this.gameOverText.x = game.config.width/2;
         this.gameOverText.y = 525/2;
+        this.tombstone.x = this.baby.x;
+        this.tombstone.y = 475;
+        this.baby.visible = false;
         //this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
         //this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
     }
