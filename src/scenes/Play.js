@@ -14,6 +14,17 @@ class VariableJump extends Phaser.Scene {
         currentScene = 3;
         this.physics.world.gravity.y = 2600;
 
+        this.jumpFX = this.sound.add('jump2', {loop: false, volume: 1});
+        this.lightningFX = this.sound.add('lightningFX', {loop: false, volume: 1});
+        this.pianoFX = this.sound.add('pianoFX', {loop: false, volume: 1});
+        this.bananaFX = this.sound.add('bananaFX', {loop: false, volume: 1});
+
+
+        this.game.sound.stopAll();
+        //play level soundtrack
+        this.levelSoundtrack = this.sound.add('levelMusic', {loop: true, volume: 1});
+        this.levelSoundtrack.play();
+
         //background
         this.background1_4 = this.add.tileSprite(0,0, game.config.width, game.config.height, 'background1_4').setOrigin(0,0);
         this.background1_3 = this.add.tileSprite(0,0, game.config.width, game.config.height, 'background1_3').setOrigin(0,0);
@@ -52,7 +63,6 @@ class VariableJump extends Phaser.Scene {
         this.lightning.visible = false;
         this.physics.add.collider(this.lightning, this.ground, function(){
             explode = true;
-            //this.lightning.setVisible(false);
         });
         this.physics.add.collider(this.lightning, this.baby);
 
@@ -61,7 +71,6 @@ class VariableJump extends Phaser.Scene {
         this.piano.visible = false;
         this.physics.add.collider(this.piano, this.ground, function(){
             crash = true;
-            //this.piano.setVisible(false);
         });
         this.physics.add.collider(this.piano, this.baby);
 
@@ -116,6 +125,7 @@ class VariableJump extends Phaser.Scene {
 
         this.scoreIncrement = 25;
         this.level = 1;
+        choose = 20;
 
         //timer
         //this.levelUpText;
@@ -129,6 +139,7 @@ class VariableJump extends Phaser.Scene {
             delay: 5000,                // increase score every 5 seconds
             callback: () => {
                 if(!this.gameOver){
+                    console.log('timer');
                     score += this.scoreIncrement;
                     this.progresstext.destroy();
                     this.progresstext = this.add.text(game.config.width/2, 30, 'Level ' + this.level + ' Score: ' + score, { font: '30px Futura', fill: '#000000' }).setOrigin(0.5);
@@ -152,7 +163,7 @@ class VariableJump extends Phaser.Scene {
             this.time.delayedCall(3000, () => {
                 //this.levelUpText.destroy();
             })
-            if(this.bdifficulty > 10){
+            if(this.bdifficulty > 10 && choose != this.tempChoose){
                 this.bdifficulty -= 10;
                 this.ldifficulty -= 8;
                 this.pdifficulty -= 6;
@@ -171,8 +182,8 @@ class VariableJump extends Phaser.Scene {
             var lanep = Phaser.Math.Between(1,3);
             console.log(choose);
             if(choose <= this.bdifficulty || choose >= this.doubledifficulty){
+                console.log('banana');
                 if(choose != this.tempChoose){
-                    //this.bananatest.setVisible(true);
                     if(laneb == 1){
                         this.toss1 = true;
                         this.bananatest.y = 32;
@@ -183,20 +194,19 @@ class VariableJump extends Phaser.Scene {
                         this.toss3 = true;
                         this.bananatest.y = 300;
                     }
+                    this.bananaFX.play();
                     this.bananatest.visible = true;
                     this.bspeed = 3;
                 }
 
                 //if banana hits player
                 this.physics.overlap(this.bananatest, this.baby, function(){
-                    //this.bananatest.setVisible(false);
                     isBananaColliding = true;
                 });
                 this.bananatest.x -= this.bspeed;
             }
             if((choose > this.bdifficulty && choose <= this.ldifficulty) || choose >= this.doubledifficulty){
                 if(choose != this.tempChoose){
-                    //this.lightning.setVisible(true);
                     if(lanel == 1){
                         this.lightning.y = 32;
                         this.lspeed = 18;
@@ -207,6 +217,7 @@ class VariableJump extends Phaser.Scene {
                         this.lightning.y = 300;
                         this.lspeed = 10;
                     }
+                    this.lightningFX.play();
                     this.lightning.visible = true;
                     explode = false;
                     console.log('choose', choose, 'temp', this.tempChoose);
@@ -214,7 +225,6 @@ class VariableJump extends Phaser.Scene {
 
                 //if lightning hits player
                 this.physics.overlap(this.lightning, this.baby, function(){
-                    //this.lightning.setVisible(false);
                     isLightningColliding = true;
                 })
                 this.lightning.x -= this.lspeed;
@@ -223,7 +233,6 @@ class VariableJump extends Phaser.Scene {
             }
             if((choose > this.ldifficulty && choose <= this.pdifficulty) || choose > this.tripledifficulty){
                 if(choose != this.tempChoose){
-                    //this.piano.setVisible(true);
                     if(lanep == 1){
                         this.piano.y = 32;
                         this.pspeed = 18;
@@ -234,6 +243,7 @@ class VariableJump extends Phaser.Scene {
                         this.piano.y = 300;
                         this.pspeed = 10;
                     }
+                    this.pianoFX.play();
                     this.piano.visible = true;
                     crash = false;
                     console.log('choose', choose, 'temp', this.tempChoose);
@@ -241,7 +251,6 @@ class VariableJump extends Phaser.Scene {
 
                 //if piano hits player
                 this.physics.overlap(this.piano, this.baby, function(){
-                    //this.piano.setVisible(false);
                     isPianoColliding = true;
                 })
 
@@ -264,6 +273,7 @@ class VariableJump extends Phaser.Scene {
                     } else if(this.lives == 2){
                     this.loseLives(this.heart2);
                     } else if(this.lives == 1){
+                        console.log('uhoh');
                         this.loseLives(this.heart3);
                         this.endGame();
                     }
@@ -279,6 +289,7 @@ class VariableJump extends Phaser.Scene {
                     } else if(this.lives == 2){
                         this.loseLives(this.heart2);
                     } else if(this.lives == 1){
+                        console.log('uhoh lightning');
                         this.loseLives(this.heart3);
                         this.endGame();
                     }
@@ -295,6 +306,7 @@ class VariableJump extends Phaser.Scene {
                     } else if(this.lives == 2){
                         this.loseLives(this.heart2);
                     } else if(this.lives == 1){
+                        console.log('uhoh piano');
                         this.loseLives(this.heart3);
                         this.endGame();
                     }
@@ -324,27 +336,21 @@ class VariableJump extends Phaser.Scene {
             }
             //hands
             if(this.toss1){
-                //this.god01.update();
                 this.god01.anims.play('hands', 2);
                 this.god01.on('animationcomplete', ()=>{
                     this.toss1 = false;
-                    //this.god01.reset();
                 });
             }
             if(this.toss2){
-                //this.god02.update();
                 this.god02.anims.play('hands', 2);
                 this.god02.on('animationcomplete', ()=>{
                     this.toss2 = false;
-                    //this.god02.reset();
                 });
             }
             if(this.toss3){
-                //this.god03.update();
                 this.god03.anims.play('hands', 2);
                 this.god03.on('animationcomplete', ()=>{
                     this.toss3 = false;
-                    //this.god03.reset();
                 });
             }
             //make background scroll
@@ -353,10 +359,6 @@ class VariableJump extends Phaser.Scene {
             this.background1_3.tilePositionX += 0.3;
             this.background1_4.tilePositionX += 0.5;
             this.background1_5.tilePositionX += 0.9;
-            
-            // wrap physics object(s) .wrap(gameObject, padding)
-            /*this.physics.world.wrap(this.cloud01, this.cloud01.width/2);
-            this.physics.world.wrap(this.cloud02, this.cloud02.width/2);*/
 
             
             // check keyboard input
@@ -405,6 +407,7 @@ class VariableJump extends Phaser.Scene {
 	            this.baby.body.velocity.y = this.JUMP_VELOCITY;
 	            this.jumping = true;
 	            //this.upKey.tint = 0xFACADE;
+                this.jumpFX.play();
 	        } else {
 	    	    //this.upKey.tint = 0xFFFFFF;
 	        }
@@ -423,14 +426,15 @@ class VariableJump extends Phaser.Scene {
     loseLives(heart){
             heart.destroy();
             this.lives -= 1;
+            this.sound.play('crush'); 
     }
     endGame(){
         this.gameOver = true;
         this.bananatest.x = game.config.width + 64;
         this.lightning.x = game.config.width + 64;
         this.piano.x = game.config.width + 64;
+        this.sound.play('deathFX');
         this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2 + 50, 'SCORE: ' + score, { font: '25px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
         this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
     }
 }

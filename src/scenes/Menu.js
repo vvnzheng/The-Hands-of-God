@@ -6,6 +6,14 @@ class Menu extends Phaser.Scene {
     preload() {
         //load audio
         this.load.audio('menuMusic', './assets/menuMusic.mp3');
+        this.load.audio('levelMusic', './assets/levelMusic.mp3');
+        this.load.audio('jump2', './assets/jump2.wav');
+        this.load.audio('crush', './assets/crush.wav');
+        this.load.audio('menuSelect', './assets/menuSelect.wav');
+        this.load.audio('pianoFX', './assets/pianoSound.mp3');
+        this.load.audio('lightningFX', './assets/lightningSound.mp3');
+        this.load.audio('bananaFX', './assets/bananaSlip.wav');
+        this.load.audio('deathFX', './assets/deathSound_FX.wav');
         //menu screen
         this.load.spritesheet('titleScreen1', 'assets/titleScreen.png', {frameWidth: 840, frameHeight: 525, startFrame:0, endFrame: 2});
         this.load.spritesheet('pressStart', 'assets/pressStart.png', {frameWidth: 840, frameHeight: 525, startFrame:0, endFrame: 2});
@@ -15,14 +23,11 @@ class Menu extends Phaser.Scene {
     }
 
     create() {
-        tkey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.T);
-
         //this.game.sound.stopAll();
         //play menu soundtrack
         this.soundtrack = this.sound.add('menuMusic', {loop: true, volume: 1});
-        //if(this.soundtrack.isPlaying){
-            this.soundtrack.play();
-        //}
+        this.soundtrack.play();
+
 
         //title screen
         this.anims.create({
@@ -47,7 +52,7 @@ class Menu extends Phaser.Scene {
         })
 
         this.titleScreen2 = this.add.sprite(0, 0, 'titleScreen2').setOrigin(0,0);
-        this.babyWalking = this.add.sprite(-100, game.config.height/2.25, 'baby').setOrigin(0,0).setScale(.7);
+        this.babyWalking = this.add.sprite(0, game.config.height/2.25, 'baby').setOrigin(0,0).setScale(.7);
         let titleScreen = this.add.sprite(0, 0, 'titleScreen1').setOrigin(0,0);
         this.titleScreen3 = this.add.sprite(0, 0, 'pressStart').setOrigin(0,0);
 
@@ -62,17 +67,13 @@ class Menu extends Phaser.Scene {
     update() {
         if(cursors.space.isDown){
             //this.sound.play('insertFXhere');
-            this.scene.start('loadScene');
-        }
-
-        if(Phaser.Input.Keyboard.JustDown(tkey)){
             this.scene.start('tutorial');
+            this.sound.play('menuSelect'); 
         }
-
 
         this.babyWalking.x += 1;
         if(this.babyWalking.x >= game.config.width * 2)
-            this.babyWalking.x = -100;
+            this.babyWalking.x = 0;
     }
 
 }
