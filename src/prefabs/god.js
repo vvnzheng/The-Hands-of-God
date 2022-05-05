@@ -8,13 +8,13 @@ class God extends Phaser.GameObjects.Sprite {
       scene.add.existing(this);
     }
     update(){
-        if(this.x >= game.config.width - this.width ){
-            this.x -= 3;
+        if(this.x >= game.config.width - this.width/2 ){
+            this.x -= 2;
         } else {
             this.reset();
         }
     }
     reset(){
-        this.x = game.config.width;
+        this.x = game.config.width + this.width;
     }
 }
