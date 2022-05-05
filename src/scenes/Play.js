@@ -151,6 +151,10 @@ class VariableJump extends Phaser.Scene {
 
         // print Level name
         this.progresstext = this.add.text(game.config.width/2, 30, 'Level ' + this.level + ' Score: ' + score, { font: '30px Futura', fill: '#000000' }).setOrigin(0.5);
+    
+        //add gameover text
+        this.gameOverText = this.add.image(game.config.width * 2, 0, 'gameover');
+        
     }
     timerEvent() {
         if(!this.gameOver){
@@ -220,7 +224,6 @@ class VariableJump extends Phaser.Scene {
                     this.lightningFX.play();
                     this.lightning.visible = true;
                     explode = false;
-                    console.log('choose', choose, 'temp', this.tempChoose);
                 }
 
                 //if lightning hits player
@@ -246,7 +249,6 @@ class VariableJump extends Phaser.Scene {
                     this.pianoFX.play();
                     this.piano.visible = true;
                     crash = false;
-                    console.log('choose', choose, 'temp', this.tempChoose);
                 }
 
                 //if piano hits player
@@ -273,7 +275,6 @@ class VariableJump extends Phaser.Scene {
                     } else if(this.lives == 2){
                     this.loseLives(this.heart2);
                     } else if(this.lives == 1){
-                        console.log('uhoh');
                         this.loseLives(this.heart3);
                         this.endGame();
                     }
@@ -289,7 +290,6 @@ class VariableJump extends Phaser.Scene {
                     } else if(this.lives == 2){
                         this.loseLives(this.heart2);
                     } else if(this.lives == 1){
-                        console.log('uhoh lightning');
                         this.loseLives(this.heart3);
                         this.endGame();
                     }
@@ -434,8 +434,10 @@ class VariableJump extends Phaser.Scene {
         this.lightning.x = game.config.width + 64;
         this.piano.x = game.config.width + 64;
         this.sound.play('deathFX');
-        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
+        this.gameOverText.x = game.config.width/2;
+        this.gameOverText.y = 525/2;
+        //this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', { font: '90px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
+        //this.add.text(game.config.width/2, game.config.height/2 + 80, 'Press R to restart', { font: '50px Futura', fill: '#FFFFFF' }).setOrigin(0.5);
     }
 }
 
