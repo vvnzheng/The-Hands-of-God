@@ -1,6 +1,6 @@
-class VariableJump extends Phaser.Scene {
+class Play extends Phaser.Scene {
     constructor() {
-        super('variableJumpScene');
+        super('playScene');
     }
     
     create() {
@@ -65,6 +65,12 @@ class VariableJump extends Phaser.Scene {
             explode = true;
         });
         this.physics.add.collider(this.lightning, this.baby);
+
+        /*this.anims.create({
+            key: 'dissipate',
+            frames: this.anims.generateFrameNumbers('flash', {start: 0, end: 5, first: 0}),
+            frameRate: 5
+        });*/
 
         //add piano
         this.piano = this.physics.add.sprite(game.config.width, 32, 'piano');
@@ -276,20 +282,24 @@ class VariableJump extends Phaser.Scene {
                 isBananaColliding = false;
             }
             if(isLightningColliding || explode){
-                this.lightning.x = game.config.width;
-                if(isLightningColliding){
-                    if(this.lives == 3){
-                        this.loseLives(this.heart1);
-                    } else if(this.lives == 2){
-                        this.loseLives(this.heart2);
-                    } else if(this.lives == 1){
-                        this.loseLives(this.heart3);
-                        this.endGame();
+                //this.lightning.anims.play('dissipate', 6);
+                //this.lspeed = 0;
+                //this.lightning.on('animationcomplete', ()=>{
+                    this.lightning.x = game.config.width;
+                    if(isLightningColliding){
+                        if(this.lives == 3){
+                            this.loseLives(this.heart1);
+                        } else if(this.lives == 2){
+                            this.loseLives(this.heart2);
+                        } else if(this.lives == 1){
+                            this.loseLives(this.heart3);
+                            this.endGame();
+                        }
                     }
-                }
-                this.lightning.visible = false;
-                isLightningColliding = false;
-                explode = false;
+                    this.lightning.visible = false;
+                    isLightningColliding = false;
+                    explode = false;
+                //});
             }
             if(isPianoColliding || crash){
                 this.piano.x = game.config.width;

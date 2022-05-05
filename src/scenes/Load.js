@@ -7,8 +7,6 @@ class Load extends Phaser.Scene {
         // set load path
         this.load.path = 'assets/';
         // take care of all of our asset loading now
-        this.load.image('arrowKey', 'arrowKey.png');
-        this.load.image('talltrees', 'talltrees.png');
         this.load.image('groundScroll', 'ground.png');
         this.load.atlasXML('shooter_atlas', 'shooter_sheet.png', 'shooter_sheet.xml');
         this.load.image('banana', 'bananaoutlined.png');
@@ -17,6 +15,7 @@ class Load extends Phaser.Scene {
         this.load.image('piano', 'piano.png');
         this.load.image('tombstone', 'tombstone.png');
         this.load.image('gameover', 'gameover.png');
+        //this.load.spritesheet('flash', 'flash.png', {frameWidth: 64, frameHeight: 100, startFrame: 0, endFrame: 5});
         //background level 1
         this.load.image('background1_1', 'background1_1.png');
         this.load.image('background1_2', 'background1_2.png');
@@ -33,6 +32,6 @@ class Load extends Phaser.Scene {
 
     create() {
         // ...and pass to the next Scene
-        this.scene.start('variableJumpScene');
+        this.scene.start('playScene');
     }
 }
